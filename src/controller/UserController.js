@@ -61,8 +61,28 @@ const loginUser = async (req,res) => {
         })
     }
 }
+const updateUser = async (req,res) => {
+    try{
+        const userId = req.params.id
+        const data = req.body
+        if(!userId){
+              return res.status(200).json({
+                status:'ERR',
+                message:'The userId do not exist'
+            })
+        }
+         const response = await UserService.updateUser(userId,data) // nếu k rơi vào trường hợp nào thì cho 
+         //userId qua thằng UserService
+         return res.status(200).json(response)
+    }catch(e){
+        return res.status(404).json({
+            message:e
+        })
+    }
+}
 
 module.exports = {
     createUser,
-    loginUser
+    loginUser,
+    updateUser
 }
