@@ -26,6 +26,30 @@ const authMiddleware = (req,res,next) => {
     })
 }
 
+const authUserMiddleware = (req,res,next) => {
+    const token = req.headers.token.split(' ')[1]
+    const userId = req.params.id
+    jwt.verify(token,process.env.ACCESS_TOKEN,function(err,user){
+        if(err){
+            return res.status(404).json({
+                message:'The author 1 err verify authUser',
+                status:'ERR'
+            })
+        }
+        const {payload} = user
+        if(payload?.isAdmin || payload?.id === userId){
+            next()
+        }else{
+            return res.status(404).json({
+                message:'The author user err',
+                status:'ERR'
+            })
+        }
+        console.log('user',user);
+    })
+}
+
 module.exports = {
-    authMiddleware
+    authMiddleware,
+    authUserMiddleware
 }
