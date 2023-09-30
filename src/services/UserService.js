@@ -16,7 +16,6 @@ const createUser = (newUser) => {
                 })
             }
             const hash = bcrypt.hashSync(password,10)
-            console.log('hash',hash);
             const createUser = await User.create ({
                 name,
                 email,
@@ -101,6 +100,8 @@ const updateUser = (id, data) => {
         }
     })
 }
+
+
 
 module.exports = {
     createUser,
