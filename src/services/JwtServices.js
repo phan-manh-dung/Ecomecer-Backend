@@ -18,7 +18,6 @@ dotenv.config()
  const refreshTokenJwtService = (token) => {
        return new Promise(async (resolve, reject) => {
         try {
-            console.log('token',token);
             jwt.verify(token,process.env.REFRESH_TOKEN, async (err,user) => {
                 if(err){
                     resolve({
