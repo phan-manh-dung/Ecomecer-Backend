@@ -25,10 +25,9 @@ dotenv.config()
                         message:'The refresh token Jwt not required'
                     })
                 }
-                const {payload} = user
                 const access_token = await generalAccessToken({
-                        id:payload?.id,
-                        isAdmin:payload?.isAdmin
+                        id:user?.id,
+                        isAdmin:user?.isAdmin
                     })
                     resolve({
                         status: 'OK',

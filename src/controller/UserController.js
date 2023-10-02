@@ -52,8 +52,9 @@ const loginUser = async (req,res) => {
          // req.body qua thằng UserService
          const {refresh_token,...newResponse} = response
          res.cookie('refresh_token',refresh_token,{
-            HttpOnly:true,
-            Secure:true,
+            httpOnly:true,
+            secure:false,
+            samesite:'strict'
          })
          return res.status(200).json(newResponse)
     }catch(e){
@@ -152,6 +153,20 @@ const refreshToken = async (req,res) => {
     }
 }
 
+const logUotUser = async (req,res) => {
+    try{
+        res.clearCookie('refresh_token')
+        return res.status(200).json({
+            status:'OK',
+            message:'Log out success'
+        })
+    }catch(e){
+        return res.status(404).json({
+            message:e
+        })
+    }
+}
+
 
 
 module.exports = {
@@ -161,5 +176,6 @@ module.exports = {
     deleteUser,
     getAllUser,
     getDetailsUser,
-    refreshToken
+    refreshToken,
+    logUotUser
 }
