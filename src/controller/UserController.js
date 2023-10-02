@@ -3,13 +3,13 @@ const JwtServices = require('../services/JwtServices')
 
 const createUser = async (req,res) => {
     try{
-        const {name ,email,password,confirmPassword,phone} = req.body
+        const {email,password,confirmPassword} = req.body
          const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
          const isCheckEmail = reg.test(email)
-        if(!name || !email || !password || !confirmPassword ||!phone){
+        if(!email || !password || !confirmPassword){
             return res.status(200).json({
                 status:'ERR',
-                message:'Insufficient value entered'
+                message:'Insufficient value entered 1'
             })
         }else if(!isCheckEmail){
             return res.status(200).json({
@@ -34,10 +34,10 @@ const createUser = async (req,res) => {
 
 const loginUser = async (req,res) => {
     try{
-        const {name ,email,password,confirmPassword,phone} = req.body
+        const {email,password} = req.body
          const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
          const isCheckEmail = reg.test(email)
-        if(!name || !email || !password || !confirmPassword ||!phone){
+        if(!email || !password ){
             return res.status(200).json({
                 status:'ERR',
                 message:'Insufficient value entered'
@@ -47,21 +47,22 @@ const loginUser = async (req,res) => {
                 status:'ERR',
                 message:'Data is not email'
             })
-        }else if(password !== confirmPassword){
-            return res.status(200).json({
-                status:'ERR',
-                message:'Password unlike confirmPassword'
-            })
         }
          const response = await UserService.loginUser(req.body) // nếu k rơi vào trường hợp nào thì cho 
          // req.body qua thằng UserService
-         return res.status(200).json(response)
+         const {refresh_token,...newResponse} = response
+         res.cookie('refresh_token',refresh_token,{
+            HttpOnly:true,
+            Secure:true,
+         })
+         return res.status(200).json(newResponse)
     }catch(e){
         return res.status(404).json({
             message:e
         })
     }
 }
+
 const updateUser = async (req,res) => {
     try{
         const userId = req.params.id
@@ -133,7 +134,7 @@ const getDetailsUser = async (req,res) => {
 
 const refreshToken = async (req,res) => {
     try{
-        const token = req.headers.token.split(' ')[1]
+        const token = req.cookies.refresh_token
         if(!token){
               return res.status(200).json({
                 status:'ERR',
@@ -142,7 +143,8 @@ const refreshToken = async (req,res) => {
         }
          const response = await JwtServices.refreshTokenJwtService(token) // nếu k rơi vào trường hợp nào thì cho 
          //userId qua thằng UserService
-         return res.status(200).json(response)
+        return res.status(200).json(response)
+        return
     }catch(e){
         return res.status(404).json({
             message:e
