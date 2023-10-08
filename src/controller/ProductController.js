@@ -59,6 +59,24 @@ const deleteProduct= async (req,res) => {
         })
     }
 }
+const deleteManyProduct= async (req,res) => {
+    try{
+        const ids = req.body
+        if(!ids){
+              return res.status(200).json({
+                status:'ERR',
+                message:'The ids do not exist delete'
+            })
+        }
+         const response = await ProductService.deleteManyProduct(ids) // nếu k rơi vào trường hợp nào thì cho 
+         //userId qua thằng UserService
+         return res.status(200).json(response)
+    }catch(e){
+        return res.status(404).json({
+            message:e
+        })
+    }
+}
 
 const getDetailsProduct = async (req,res) => {
     try{
@@ -97,5 +115,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     getDetailsProduct,
-    getAllProduct
+    getAllProduct,
+    deleteManyProduct
 }
