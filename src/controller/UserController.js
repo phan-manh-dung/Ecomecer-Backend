@@ -167,13 +167,14 @@ const logUotUser = async (req,res) => {
     }
 }
 
-const deleteManyUser = async (req, res) => {
+const deleteMany = async (req, res) => {
     try {
         const ids = req.body.ids
+
         if (!ids) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The ids is required'
+                message: 'The ids undefined'
             })
         }
         const response = await UserService.deleteManyUser(ids)
@@ -194,5 +195,6 @@ module.exports = {
     getAllUser,
     getDetailsUser,
     refreshToken,
-    logUotUser,deleteManyUser
+    logUotUser,
+    deleteMany
 }

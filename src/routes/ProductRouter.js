@@ -5,8 +5,8 @@ const ProductController = require('../controller/ProductController')
 
 router.post('/create',ProductController.createProduct) 
 router.put('/update/:id',authMiddleware,ProductController.updateProduct) 
-router.delete('/delete/:id',ProductController.deleteProduct) 
+router.delete('/delete/:id',authMiddleware,ProductController.deleteProduct) 
 router.get('/get-details/:id',ProductController.getDetailsProduct) 
 router.get('/get-all',ProductController.getAllProduct) 
-router.post('/delete-many', authMiddleware, ProductController.deleteManyProduct)
+router.post('/delete-many',authMiddleware,ProductController.deleteMany)
 module.exports = router
