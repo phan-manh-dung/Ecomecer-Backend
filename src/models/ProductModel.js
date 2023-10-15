@@ -11,7 +11,16 @@ const productSchema = new mongoose.Schema(
         description: { type: String },
         color: { type: String },
         discount: { type: Number },
-        sold: { type: Number }                                                                                                                                                      
+        sold: { type: Number }  ,
+        brand:{type:String},
+        image1:{type: String},                                                                                                                                                    
+        image2:{type: String},                                                                                                                                                    
+        image3:{type: String},                                                                                                                                                    
+        image4:{type: String},                                                                                                                                                    
+        image5:{type: String},                                                                                                                                                    
+        image6:{type: String},                                                                                                                                                    
+        image7:{type: String},                                                                                                                                                    
+        image8:{type: String},                                                                                                                                                    
     },
     {
         timestamps: true,

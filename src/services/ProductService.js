@@ -2,7 +2,8 @@ const Product = require('../models/ProductModel')
 
 const createProduct = (newProduct) => {
     return new Promise( async(resolve,reject) => {
-           const {name ,image,type,price,countInStock,rating,description,color,discount} = newProduct
+           const {name ,image,image1,image2,image3,image4,image5,image6,image7,
+image8,type,price,countInStock,rating,description,color,discount,brand} = newProduct
         try{
             const checkProduct = await Product.findOne({
                 name:name
@@ -23,6 +24,15 @@ const createProduct = (newProduct) => {
                 description,
                 color,
                 discount,
+                brand,
+                image1,
+                image2,
+                image3,
+                image4,
+                image5,
+                image6,
+                image7,
+                image8,
             })
             if(newProduct){
                 resolve({
