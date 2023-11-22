@@ -4,4 +4,5 @@ const { authUserMiddleware,authMiddleware } = require('../middleware/authMiddlew
 const OrderController = require('../controller/OrderController')
 
 router.post('/create/:id', authUserMiddleware, OrderController.createOrder)
+router.get('/get-details-order/:id', OrderController.getDetailsOrder)
 module.exports = router

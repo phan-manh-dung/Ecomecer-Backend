@@ -12,7 +12,8 @@ const productSchema = new mongoose.Schema(
         color: { type: String },
         discount: { type: Number },
         sold: { type: Number }  ,
-        brand:{type:String},                                                                                                                                            
+        brand:{type:String},  
+        amount: { type: Number},                                                                                                                                     
     },
     {
         timestamps: true,
