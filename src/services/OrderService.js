@@ -1,4 +1,4 @@
-const Order = require("../models/OrderProduct")
+const Order = require("../models/OrderProduct") // model để get dữ liệu vào
 const Product = require("../models/ProductModel")
 
 const { generalAccessToken, refreshAccessToken } = require('./JwtServices')
@@ -34,15 +34,38 @@ const createOrder = (newOrder) => {
      })
 }
 
-
-
 const getOrderDetails = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const order = await Order.findOne({
-                user: id
+                _id: id
             })
             console.log('order',order);
+            if (order === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The order is not defined 1'
+                })
+            }
+
+            resolve({
+                status: 'OK',
+                message: 'SUCESSS',
+                data: order
+            })
+        } catch (e) {
+            // console.log('e', e)
+            reject(e)
+        }
+    })
+}
+
+const getAllOrderDetails = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const order = await Order.find({
+                user: id
+            }).sort({createdAt: -1, updatedAt: -1})
             if (order === null) {
                 resolve({
                     status: 'ERR',
@@ -62,7 +85,52 @@ const getOrderDetails = (id) => {
     })
 }
 
+const getAllOrder = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allOrder = await Order.find().sort({createdAt: -1, updatedAt: -1})
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: allOrder
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+const cancelOrderDetails = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const order = await Order.findByIdAndDelete(id);
+            if (!order) {
+                return resolve({
+                    status: 'ERR',
+                    message: 'Order does not exit'
+                });
+            }
+
+            return resolve({
+                status: 'OK',
+                message: 'Delete order success',
+                data: order
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+
 module.exports = {
     createOrder,
-    getOrderDetails
+    getOrderDetails,
+    getAllOrderDetails,
+    getAllOrder,
+    cancelOrderDetails
 }
+
+
+
+
