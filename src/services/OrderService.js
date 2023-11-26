@@ -122,13 +122,43 @@ const cancelOrderDetails = (id) => {
     });
 };
 
+// const deleteManyProduct = (ids) => {
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             await Product.deleteMany({ _id: ids })
+//             resolve({
+//                 status: 'OK',
+//                 message: 'Delete order success',
+//             })
+//         } catch (e) {
+//             reject(e)
+//         }
+//     })
+// }
+
+const deleteManyOrder = (ids) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await Order.deleteMany({ _id: { $in: ids } }) // Sử dụng $in operator để xóa các bản ghi có _id nằm trong mảng ids
+            resolve({
+                status: 'OK',
+                message: 'Delete order success',
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
+
 
 module.exports = {
     createOrder,
     getOrderDetails,
     getAllOrderDetails,
     getAllOrder,
-    cancelOrderDetails
+    cancelOrderDetails,
+    deleteManyOrder
 }
 
 

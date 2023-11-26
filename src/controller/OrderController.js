@@ -89,11 +89,31 @@ const cancelOrderDetails = async (req, res) => {
     }
 }
 
+const deleteMany= async (req,res) => {
+    try{
+        const ids = req.body.ids
+        if(!ids){
+              return res.status(200).json({
+                status:'ERR',
+                message:'The ids undefined'
+            })
+        }
+         const response = await OrderService.deleteManyOrder(ids) // nếu k rơi vào trường hợp nào thì cho 
+         //userId qua thằng UserService
+         return res.status(200).json(response)
+    }catch(e){
+        return res.status(404).json({
+            message:e
+        })
+    }
+}
+
 
 module.exports = {
     createOrder,
     getDetailsOrder,
     getAllOrderDetails,
     getAllOrder,
-    cancelOrderDetails
+    cancelOrderDetails,
+    deleteMany
 }

@@ -8,4 +8,5 @@ router.get('/get-details-order/:id', OrderController.getDetailsOrder)
 router.get('/get-all-order/:id',authUserMiddleware, OrderController.getAllOrderDetails)
 router.get('/get-all-order', OrderController.getAllOrder)
 router.delete('/cancel-order/:id', OrderController.cancelOrderDetails)
+router.post('/delete-many-order',OrderController.deleteMany)
 module.exports = router
