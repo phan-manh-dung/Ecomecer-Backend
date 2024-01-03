@@ -1,4 +1,5 @@
 const express = require('express')
+
 const dotenv = require('dotenv')
 const { default: mongoose } = require('mongoose')
 const routes = require('./src/routes')
@@ -28,3 +29,4 @@ mongoose.connect(`${process.env.MONGO_DB}`)
 app.listen(PORT,() => {
     console.log('Server on running port', + PORT);
 })
+

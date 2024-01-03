@@ -3,18 +3,11 @@ const JwtServices = require('../services/JwtServices')
 
 const createUser = async (req,res) => {
     try{
-        const {email,password,confirmPassword} = req.body
-         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-         const isCheckEmail = reg.test(email)
-        if(!email || !password || !confirmPassword){
+        const {name,password,confirmPassword} = req.body
+        if(!name || !password || !confirmPassword){
             return res.status(200).json({
                 status:'ERR',
-                message:'Insufficient value entered 1'
-            })
-        }else if(!isCheckEmail){
-            return res.status(200).json({
-                status:'ERR',
-                message:'Data is not email'
+                message:'Insufficient value entered '
             })
         }else if(password !== confirmPassword){
             return res.status(200).json({
@@ -34,18 +27,11 @@ const createUser = async (req,res) => {
 
 const loginUser = async (req,res) => {
     try{
-        const {email,password} = req.body
-         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-         const isCheckEmail = reg.test(email)
-        if(!email || !password ){
+        const {name,password} = req.body
+        if(!name || !password ){
             return res.status(200).json({
                 status:'ERR',
                 message:'Insufficient value entered'
-            })
-        }else if(!isCheckEmail){
-            return res.status(200).json({
-                status:'ERR',
-                message:'Data is not email'
             })
         }
          const response = await UserService.loginUser(req.body) // nếu k rơi vào trường hợp nào thì cho 
@@ -54,9 +40,10 @@ const loginUser = async (req,res) => {
          res.cookie('refresh_token',refresh_token,{
             httpOnly:true,
             secure:false,
-            samesite:'strict'
+            samesite:'strict',
+            path: '/',
          })
-         return res.status(200).json(newResponse)
+          return res.status(200).json({...newResponse, refresh_token}) // lưu ý refresh token ở đây
     }catch(e){
         return res.status(404).json({
             message:e
@@ -133,22 +120,20 @@ const getDetailsUser = async (req,res) => {
     }
 }
 
-const refreshToken = async (req,res) => {
-    try{
-        const token = req.cookies.refresh_token
-        if(!token){
-              return res.status(200).json({
-                status:'ERR',
-                message:'The token is required'
+const refreshToken = async (req, res) => {
+    try {
+        let token = req.headers.token.split(' ')[1]
+        if (!token) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The token is required'
             })
         }
-         const response = await JwtServices.refreshTokenJwtService(token) // nếu k rơi vào trường hợp nào thì cho 
-         //userId qua thằng UserService
+        const response = await JwtServices.refreshTokenJwtService(token)
         return res.status(200).json(response)
-        return
-    }catch(e){
+    } catch (e) {
         return res.status(404).json({
-            message:e
+            message: e
         })
     }
 }
@@ -185,7 +170,6 @@ const deleteMany = async (req, res) => {
         })
     }
 }
-
 
 module.exports = {
     createUser,

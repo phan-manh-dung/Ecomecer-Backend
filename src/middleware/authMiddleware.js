@@ -22,26 +22,70 @@ const authMiddleware = (req,res,next) => {
     })
 }
 
-const authUserMiddleware = (req,res,next) => {
-    const token = req.headers.token.split(' ')[1]
-    const userId = req.params.id
-    jwt.verify(token,process.env.ACCESS_TOKEN,function(err,user){
-        if(err){
-            return res.status(404).json({
-                message:'The author 1 err verify authUser',
-                status:'ERR'
-            })
+// const authUserMiddleware = (req, res, next) => {
+//     const token = req.headers.token.split(' ')[1]
+//     const userId = req.params.id
+
+//     jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
+//         console.log('err',err);
+//         if (err) {
+//             return res.status(404).json({
+//                 message: 'The author 1 err verify authUser',
+//                 status: 'ERROR'
+//             })
+//         }
+//         if (user?.isAdmin || user?.id === userId) {
+//             next()
+//         } else {
+//             return res.status(404).json({
+//                 message: 'The authemtication 2',
+//                 status: 'ERROR'
+//             })
+//         }
+//     });
+// }
+
+
+const authUserMiddleware = (req, res, next) => {
+    const token = req.headers.token.split(' ')[1];
+    const userId = req.params.id;
+
+    try {
+        const decoded = jwt.decode(token);
+        if (decoded.exp < Date.now() / 1000) {
+            return res.status(401).json({
+                message: 'Token has expired',
+                status: 'ERROR'
+            });
         }
-        if(user?.isAdmin){
-            next()
-        }else{
-            return res.status(404).json({
-                message:'The author user err',
-                status:'ERR'
-            })
-        }
-    })
-}
+
+        jwt.verify(token, process.env.ACCESS_TOKEN, function (err, user) {
+            if (err) {
+                return res.status(404).json({
+                    message: 'The author 1 err verify authUser',
+                    status: 'ERROR'
+                });
+            }
+            if (user?.isAdmin || user?.id === userId) {
+                next();
+            } else {
+                return res.status(404).json({
+                    message: 'The authentication 2',
+                    status: 'ERROR'
+                });
+            }
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({
+            message: 'Internal server error',
+            status: 'ERROR'
+        });
+    }
+};
+
+
+
 
 module.exports = {
     authMiddleware,

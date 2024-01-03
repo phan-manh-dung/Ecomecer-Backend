@@ -21,6 +21,7 @@ const createProduct = (newProduct) => {
                 quality:Number(countInStock) ,
                 rating,
                 description,
+                countInStock,
                 color,
                 discount:Number(discount),
                 brand,

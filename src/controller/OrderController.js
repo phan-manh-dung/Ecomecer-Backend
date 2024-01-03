@@ -18,6 +18,25 @@ const createOrder = async (req, res) => {
     }
 }
 
+const createCart = async (req, res) => {
+    try { 
+        const { userId } = req.body;
+        if (!userId) {
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'userId is a required field'
+            });
+        }
+
+        const response = await OrderService.createCart(req.body);
+        console.log('data', response);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(500).json({
+            message: e.message || 'Internal server error'
+        });
+    }
+};
 
 const getDetailsOrder = async (req, res) => {
     try {
@@ -70,6 +89,16 @@ const getAllOrder = async (req, res) => {
     }
 }
 
+const getAllCart = async (req, res) => {
+    try {
+        const userId = req.query.userId; // Lấy userId từ query parameters
+        const userCarts = await OrderService.getAllCart(userId);
+        return res.status(200).json(userCarts);
+    } catch (e) {
+        return res.status(404).json({ message: e.message });
+    }
+};
+
 const cancelOrderDetails = async (req, res) => {
     try {
          const orderId = req.params.id;
@@ -80,6 +109,25 @@ const cancelOrderDetails = async (req, res) => {
             })
         }
         const response = await OrderService.cancelOrderDetails(orderId)
+        return res.status(200).json(response)
+    } catch (e) {
+        // console.log(e)
+        return res.status(404).json({
+            message: e
+        })
+    }
+}
+
+const deleteCart = async (req, res) => {
+    try {
+         const cartId = req.params.id;
+        if (!cartId) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The CartID is required'
+            })
+        }
+        const response = await OrderService.deleteCart(cartId)
         return res.status(200).json(response)
     } catch (e) {
         // console.log(e)
@@ -115,5 +163,8 @@ module.exports = {
     getAllOrderDetails,
     getAllOrder,
     cancelOrderDetails,
-    deleteMany
+    deleteMany,
+    createCart,
+    getAllCart,
+    deleteCart
 }

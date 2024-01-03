@@ -1,5 +1,5 @@
 const Order = require("../models/OrderProduct") // model để get dữ liệu vào
-const Product = require("../models/ProductModel")
+const Cart = require("../models/CartModel")
 
 const { generalAccessToken, refreshAccessToken } = require('./JwtServices')
 
@@ -33,6 +33,36 @@ const createOrder = (newOrder) => {
         }
      })
 }
+
+const createCart = async ({ userId, name, amount, image, price, product, color, discount, type }) => {
+    try {
+        const newCartItem = {
+            name,
+            amount,
+            image,
+            price,
+            product,
+            color,
+            discount,
+            type
+        };
+
+        const newCart = await Cart.create({
+            userId,
+            orderItems: [newCartItem]
+        });
+
+        if (newCart) {
+            return {
+                status: 'OK',
+                message: 'Success Cart',
+                data: newCart
+            };
+        }
+    } catch (error) {
+        throw error;
+    }
+};
 
 const getOrderDetails = (id) => {
     return new Promise(async (resolve, reject) => {
@@ -100,6 +130,18 @@ const getAllOrder = () => {
     })
 }
 
+const getAllCart = async (userId) => {
+    try {
+        const userCarts = await Cart.find({ userId }); // Lấy các carts của người dùng dựa trên userId
+        console.log('cart',userCarts);
+        return userCarts;
+    } catch (error) {
+        throw error; 
+    }
+};
+
+
+
 const cancelOrderDetails = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -115,6 +157,28 @@ const cancelOrderDetails = (id) => {
                 status: 'OK',
                 message: 'Delete order success',
                 data: order
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+const deleteCart = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const cart = await Cart.findByIdAndDelete(id);
+            if (!cart) {
+                return resolve({
+                    status: 'ERR',
+                    message: 'Cart does not exit'
+                });
+            }
+
+            return resolve({
+                status: 'OK',
+                message: 'Delete cart success',
+                data: cart
             });
         } catch (e) {
             reject(e);
@@ -158,7 +222,10 @@ module.exports = {
     getAllOrderDetails,
     getAllOrder,
     cancelOrderDetails,
-    deleteManyOrder
+    deleteManyOrder,
+    createCart,
+    getAllCart,
+    deleteCart
 }
 
 

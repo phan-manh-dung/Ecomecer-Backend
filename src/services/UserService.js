@@ -4,30 +4,32 @@ const { generalAccessToken, refreshAccessToken } = require('./JwtServices')
 
 const createUser = (newUser) => {
     return new Promise( async(resolve,reject) => {
-         const {email,password,confirmPassword} = newUser
+         const {name,password} = newUser
         try{
             const checkUser = await User.findOne({
-                email:email
+                name:name
             })
             if(checkUser !== null){
+                await checkUser.save();
                 resolve({
                     status:'ERR',
-                    message:'The email is already'
+                    message:'The name is already'
                 })
             }
-            const hash = bcrypt.hashSync(password,10)
+            const hash = bcrypt.hashSync(String(password), 10);
             const createUser = await User.create ({
-                email,
+                name,
                 password:hash,
             })
             if(createUser){
                 resolve({
                     status:'OK',
-                    message:'Success',
+                    message:'Success user',
                     data:createUser
                 })
             }
         }catch(e){
+            console.error('Error:', e);
             reject(e)
         }
     })
@@ -35,10 +37,10 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
     return new Promise( async(resolve,reject) => {
-         const {email,password} = userLogin
+         const {name,password} = userLogin
         try{
             const checkUser = await User.findOne({
-                email:email
+                name:name
             })
             if(checkUser === null){
                 resolve({
@@ -61,13 +63,14 @@ const loginUser = (userLogin) => {
                 id:checkUser.id,
                 isAdmin:checkUser.isAdmin
             })
-                resolve({
-                    status:'OK',
-                    message:'Success',
-                    access_token,
-                    refresh_token
+
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                access_token,
+                refresh_token,
+                userId: checkUser.id, 
                 })
-            
         }catch(e){
             reject(e)
         }
@@ -175,6 +178,7 @@ const deleteManyUser = (ids) => {
         }
     })
 }
+
 module.exports = {
     createUser,
     loginUser,
