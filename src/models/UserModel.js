@@ -6,10 +6,12 @@ const userSchema = new mongoose.Schema(
         password: { type: String, required: true },
         isAdmin: { type: Boolean, default: false, required: true },
         phone: { type: Number },
+        // address
+        moreAddress:{type:String},
         district: { type: String },
         city: {type: String},
         country:{type:String},
-        moreAddress:{type:String},
+        // user
         avatar: { type: String },
         dateOfBirth: { type: Date },
         sex:{type: String},
