@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema(
         country:{type:String},
         nickname:{type:String},
         loginType: { type: String } 
-     
     },
     {
         timestamps: true,
