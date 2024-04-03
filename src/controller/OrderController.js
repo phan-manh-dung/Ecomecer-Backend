@@ -29,7 +29,6 @@ const createCart = async (req, res) => {
         }
 
         const response = await OrderService.createCart(req.body);
-        console.log('data', response);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(500).json({
