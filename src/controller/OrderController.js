@@ -1,45 +1,5 @@
 const OrderService = require('../services/OrderService');
 
-// const createOrder = async (req, res) => {
-//     try {
-//         const { fullName, phone, moreAddress, district, city, country, paymentMethod, shippingPrice, totalPrice } =
-//             req.body;
-
-//         console.log('req', req.body);
-//         console.log('fullname', fullName);
-//         console.log('phone', phone);
-//         console.log('moreAddress', moreAddress);
-//         console.log('district', district);
-//         console.log('city', city);
-//         console.log('country', country);
-//         console.log('paymentMethod', paymentMethod);
-//         console.log('shippingPrice', shippingPrice);
-//         console.log('totalPrice', totalPrice);
-//         if (
-//             !fullName ||
-//             !phone ||
-//             !moreAddress ||
-//             !district ||
-//             !city ||
-//             !country ||
-//             !paymentMethod ||
-//             !shippingPrice ||
-//             !totalPrice
-//         ) {
-//             return res.status(200).json({
-//                 status: 'ERR',
-//                 message: 'The input is required',
-//             });
-//         }
-//         const response = await OrderService.createOrder(req.body);
-//         return res.status(200).json(response);
-//     } catch (e) {
-//         return res.status(500).json({
-//             message: e.message || 'Internal server error',
-//         });
-//     }
-// };
-
 const createOrder = async (req, res) => {
     try {
         const {
