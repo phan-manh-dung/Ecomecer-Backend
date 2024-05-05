@@ -1,30 +1,109 @@
-const OrderService = require('../services/OrderService')
+const OrderService = require('../services/OrderService');
+
+// const createOrder = async (req, res) => {
+//     try {
+//         const { fullName, phone, moreAddress, district, city, country, paymentMethod, shippingPrice, totalPrice } =
+//             req.body;
+
+//         console.log('req', req.body);
+//         console.log('fullname', fullName);
+//         console.log('phone', phone);
+//         console.log('moreAddress', moreAddress);
+//         console.log('district', district);
+//         console.log('city', city);
+//         console.log('country', country);
+//         console.log('paymentMethod', paymentMethod);
+//         console.log('shippingPrice', shippingPrice);
+//         console.log('totalPrice', totalPrice);
+//         if (
+//             !fullName ||
+//             !phone ||
+//             !moreAddress ||
+//             !district ||
+//             !city ||
+//             !country ||
+//             !paymentMethod ||
+//             !shippingPrice ||
+//             !totalPrice
+//         ) {
+//             return res.status(200).json({
+//                 status: 'ERR',
+//                 message: 'The input is required',
+//             });
+//         }
+//         const response = await OrderService.createOrder(req.body);
+//         return res.status(200).json(response);
+//     } catch (e) {
+//         return res.status(500).json({
+//             message: e.message || 'Internal server error',
+//         });
+//     }
+// };
 
 const createOrder = async (req, res) => {
-    try { 
-        const { paymentMethod, itemsPrice, shippingPrice, totalPrice, fullName, address, phone } = req.body
-        if (!paymentMethod || !itemsPrice || !shippingPrice || !totalPrice || !fullName || !address || !phone) {
+    try {
+        const {
+            orderItems,
+            fullName,
+            phone,
+            moreAddress,
+            district,
+            city,
+            country,
+            paymentMethod,
+            shippingPrice,
+            totalPrice,
+            user,
+            product,
+        } = req.body;
+        if (
+            !fullName ||
+            !phone ||
+            !moreAddress ||
+            !district ||
+            !city ||
+            !country ||
+            !paymentMethod ||
+            !shippingPrice ||
+            !totalPrice
+        ) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The input is required'
-            })
+                message: 'The input is required',
+            });
         }
-        const response = await OrderService.createOrder(req.body)
-        return res.status(200).json(response)
+
+        const newOrder = {
+            orderItems,
+            fullName,
+            phone,
+            moreAddress,
+            district,
+            city,
+            country,
+            paymentMethod,
+            shippingPrice,
+            totalPrice,
+            user,
+            product,
+        };
+
+        const response = await OrderService.createOrder(newOrder);
+        return res.status(200).json(response);
     } catch (e) {
-        return res.status(404).json({
-            message: e
-        })
+        return res.status(500).json({
+            message: e.message || 'Internal server error',
+        });
     }
-}
+};
 
 const createCart = async (req, res) => {
-    try { 
+    try {
         const { userId } = req.body;
         if (!userId) {
             return res.status(400).json({
                 status: 'ERR',
-                message: 'userId is a required field'
+                message: 'userId is a required field',
             });
         }
 
@@ -32,61 +111,61 @@ const createCart = async (req, res) => {
         return res.status(200).json(response);
     } catch (e) {
         return res.status(500).json({
-            message: e.message || 'Internal server error'
+            message: e.message || 'Internal server error',
         });
     }
 };
 
 const getDetailsOrder = async (req, res) => {
     try {
-        const orderId = req.params.id
+        const orderId = req.params.id;
         console.log();
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The userId is required'
-            })
+                message: 'The userId is required',
+            });
         }
-        const response = await OrderService.getOrderDetails(orderId)
-        return res.status(200).json(response)
+        const response = await OrderService.getOrderDetails(orderId);
+        return res.status(200).json(response);
     } catch (e) {
         // console.log(e)
         return res.status(404).json({
-            message: e
-        })
+            message: e,
+        });
     }
-}
+};
 
 const getAllOrderDetails = async (req, res) => {
     try {
-        const userId = req.params.id
+        const userId = req.params.id;
         if (!userId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The userId is required'
-            })
+                message: 'The userId is required',
+            });
         }
-        const response = await OrderService.getAllOrderDetails(userId)
-        return res.status(200).json(response)
+        const response = await OrderService.getAllOrderDetails(userId);
+        return res.status(200).json(response);
     } catch (e) {
         // console.log(e)
         return res.status(404).json({
-            message: e
-        })
+            message: e,
+        });
     }
-}
+};
 
 const getAllOrder = async (req, res) => {
     try {
-        const data = await OrderService.getAllOrder()
-        return res.status(200).json(data)
+        const data = await OrderService.getAllOrder();
+        return res.status(200).json(data);
     } catch (e) {
         // console.log(e)
         return res.status(404).json({
-            message: e
-        })
+            message: e,
+        });
     }
-}
+};
 
 const getAllCart = async (req, res) => {
     try {
@@ -100,61 +179,60 @@ const getAllCart = async (req, res) => {
 
 const cancelOrderDetails = async (req, res) => {
     try {
-         const orderId = req.params.id;
+        const orderId = req.params.id;
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The orderId is required'
-            })
+                message: 'The orderId is required',
+            });
         }
-        const response = await OrderService.cancelOrderDetails(orderId)
-        return res.status(200).json(response)
+        const response = await OrderService.cancelOrderDetails(orderId);
+        return res.status(200).json(response);
     } catch (e) {
         // console.log(e)
         return res.status(404).json({
-            message: e
-        })
+            message: e,
+        });
     }
-}
+};
 
 const deleteCart = async (req, res) => {
     try {
-         const cartId = req.params.id;
+        const cartId = req.params.id;
         if (!cartId) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'The CartID is required'
-            })
+                message: 'The CartID is required',
+            });
         }
-        const response = await OrderService.deleteCart(cartId)
-        return res.status(200).json(response)
+        const response = await OrderService.deleteCart(cartId);
+        return res.status(200).json(response);
     } catch (e) {
         // console.log(e)
         return res.status(404).json({
-            message: e
-        })
+            message: e,
+        });
     }
-}
+};
 
-const deleteMany= async (req,res) => {
-    try{
-        const ids = req.body.ids
-        if(!ids){
-              return res.status(200).json({
-                status:'ERR',
-                message:'The ids undefined'
-            })
+const deleteMany = async (req, res) => {
+    try {
+        const ids = req.body.ids;
+        if (!ids) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The ids undefined',
+            });
         }
-         const response = await OrderService.deleteManyOrder(ids) // nếu k rơi vào trường hợp nào thì cho 
-         //userId qua thằng UserService
-         return res.status(200).json(response)
-    }catch(e){
+        const response = await OrderService.deleteManyOrder(ids); // nếu k rơi vào trường hợp nào thì cho
+        //userId qua thằng UserService
+        return res.status(200).json(response);
+    } catch (e) {
         return res.status(404).json({
-            message:e
-        })
+            message: e,
+        });
     }
-}
-
+};
 
 module.exports = {
     createOrder,
@@ -165,5 +243,5 @@ module.exports = {
     deleteMany,
     createCart,
     getAllCart,
-    deleteCart
-}
+    deleteCart,
+};
