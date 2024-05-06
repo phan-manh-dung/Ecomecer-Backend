@@ -60,7 +60,7 @@ const createCart = async ({ userId, name, amount, image, price, product, color, 
 
         const newCart = await Cart.create({
             userId,
-            orderItems: [newCartItem],
+            cartItems: [newCartItem],
         });
 
         if (newCart) {
@@ -176,6 +176,7 @@ const deleteCart = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const cart = await Cart.findByIdAndDelete(id);
+            console.log('cartIDService', cart);
             if (!cart) {
                 return resolve({
                     status: 'ERR',

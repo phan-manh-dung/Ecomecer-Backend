@@ -159,6 +159,7 @@ const cancelOrderDetails = async (req, res) => {
 const deleteCart = async (req, res) => {
     try {
         const cartId = req.params.id;
+        console.log('cartId', cartId);
         if (!cartId) {
             return res.status(200).json({
                 status: 'ERR',
