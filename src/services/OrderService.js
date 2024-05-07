@@ -17,6 +17,7 @@ const createOrder = (newOrder) => {
             user,
             product,
         } = newOrder;
+
         try {
             const createOrder = await Order.create({
                 orderItems,
@@ -176,7 +177,6 @@ const deleteCart = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const cart = await Cart.findByIdAndDelete(id);
-            console.log('cartIDService', cart);
             if (!cart) {
                 return resolve({
                     status: 'ERR',
@@ -191,6 +191,21 @@ const deleteCart = (id) => {
             });
         } catch (e) {
             reject(e);
+        }
+    });
+};
+
+const findCart = (userId, productId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const cart = await Cart.findOne({ userId, 'cartItems.product': productId });
+            if (!cart) {
+                reject({ message: 'Cart not found service' });
+            }
+            resolve({ cartId: cart._id });
+        } catch (error) {
+            console.error('Error finding cart:', error);
+            reject({ message: 'Internal server error' });
         }
     });
 };
@@ -233,4 +248,5 @@ module.exports = {
     createCart,
     getAllCart,
     deleteCart,
+    findCart,
 };

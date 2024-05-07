@@ -16,6 +16,7 @@ const createOrder = async (req, res) => {
             user,
             product,
         } = req.body;
+
         if (
             !fullName ||
             !phone ||
@@ -159,7 +160,6 @@ const cancelOrderDetails = async (req, res) => {
 const deleteCart = async (req, res) => {
     try {
         const cartId = req.params.id;
-        console.log('cartId', cartId);
         if (!cartId) {
             return res.status(200).json({
                 status: 'ERR',
@@ -195,6 +195,25 @@ const deleteMany = async (req, res) => {
     }
 };
 
+const findCart = async (req, res) => {
+    try {
+        const { id } = req.params; // Thay đổi ở đây, sử dụng id thay vì userId
+        const { productId } = req.query; // Thay đổi ở đây, sử dụng req.query để truy cập vào productId
+        if (!id || !productId) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The userId or productId is required',
+            });
+        }
+        const response = await OrderService.findCart(id, productId); // Sửa lại đây để truyền id thay vì userId
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e,
+        });
+    }
+};
+
 module.exports = {
     createOrder,
     getDetailsOrder,
@@ -205,4 +224,5 @@ module.exports = {
     createCart,
     getAllCart,
     deleteCart,
+    findCart,
 };
