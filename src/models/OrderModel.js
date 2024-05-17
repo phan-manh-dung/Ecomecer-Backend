@@ -28,6 +28,13 @@ const orderSchema = new mongoose.Schema(
         totalPrice: { type: Number },
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
         product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+
+        // trường trạng thái của đơn hàng
+        status: {
+            type: String,
+            enum: ['wait_pay', 'pending', 'deliver', 'completed', 'cancelled'],
+            default: 'pending',
+        },
         isPaid: { type: Boolean, default: false },
         paidAt: { type: Date },
         isDelivered: { type: Boolean, default: false },

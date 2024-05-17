@@ -151,7 +151,7 @@ const getAllCart = async (userId) => {
     }
 };
 
-const cancelOrderDetails = (id) => {
+const deleteOrderDatabaseByAdmin = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
             const order = await Order.findByIdAndDelete(id);
@@ -171,6 +171,30 @@ const cancelOrderDetails = (id) => {
             reject(e);
         }
     });
+};
+
+const deleteOrderToCancelled = async (id) => {
+    try {
+        const order = await Order.findById(id);
+        if (!order) {
+            return {
+                status: 'ERR',
+                message: 'Order does not exist',
+            };
+        }
+
+        // Cập nhật trạng thái của đơn hàng thành "đã hủy"
+        order.status = 'cancelled';
+        await order.save();
+
+        return {
+            status: 'OK',
+            message: 'Order cancelled successfully',
+            data: order,
+        };
+    } catch (e) {
+        throw e;
+    }
 };
 
 const deleteCart = (id) => {
@@ -243,10 +267,11 @@ module.exports = {
     getOrderDetails,
     getAllOrderDetails,
     getAllOrder,
-    cancelOrderDetails,
     deleteManyOrder,
     createCart,
     getAllCart,
     deleteCart,
     findCart,
+    deleteOrderDatabaseByAdmin,
+    deleteOrderToCancelled,
 };

@@ -138,7 +138,7 @@ const getAllCart = async (req, res) => {
     }
 };
 
-const cancelOrderDetails = async (req, res) => {
+const deleteOrderDatabaseByAdmin = async (req, res) => {
     try {
         const orderId = req.params.id;
         if (!orderId) {
@@ -147,7 +147,26 @@ const cancelOrderDetails = async (req, res) => {
                 message: 'The orderId is required',
             });
         }
-        const response = await OrderService.cancelOrderDetails(orderId);
+        const response = await OrderService.deleteOrderDatabaseByAdmin(orderId);
+        return res.status(200).json(response);
+    } catch (e) {
+        // console.log(e)
+        return res.status(404).json({
+            message: e,
+        });
+    }
+};
+
+const deleteOrderToCancelled = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        if (!orderId) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The orderId is required',
+            });
+        }
+        const response = await OrderService.deleteOrderToCancelled(orderId);
         return res.status(200).json(response);
     } catch (e) {
         // console.log(e)
@@ -219,10 +238,11 @@ module.exports = {
     getDetailsOrder,
     getAllOrderDetails,
     getAllOrder,
-    cancelOrderDetails,
+    deleteOrderToCancelled,
     deleteMany,
     createCart,
     getAllCart,
     deleteCart,
     findCart,
+    deleteOrderDatabaseByAdmin,
 };

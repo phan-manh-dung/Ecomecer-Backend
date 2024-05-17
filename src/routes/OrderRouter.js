@@ -8,7 +8,10 @@ router.post('/create/:id', authMiddlewareOne, OrderController.createOrder);
 router.get('/get-details-order/:id', OrderController.getDetailsOrder);
 router.get('/get-all-order/:id', authUserMiddleware, OrderController.getAllOrderDetails);
 router.get('/get-all-order', OrderController.getAllOrder);
-router.delete('/cancel-order/:id', OrderController.cancelOrderDetails);
+// xóa order ra khỏi database (thực sự xóa dữ liệu)
+router.delete('/delete-order/:id', OrderController.deleteOrderDatabaseByAdmin);
+// cái này chỉ chuyển order sang status khác và không thực sự xóa dữ liệu
+router.delete('/cancel-order/:id', OrderController.deleteOrderToCancelled);
 
 // cart
 router.get('/get-all-cart', OrderController.getAllCart);
