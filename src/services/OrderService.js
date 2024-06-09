@@ -82,7 +82,6 @@ const getOrderDetails = (id) => {
             const order = await Order.findOne({
                 _id: id,
             });
-            console.log('order', order);
             if (order === null) {
                 resolve({
                     status: 'ERR',
@@ -96,7 +95,7 @@ const getOrderDetails = (id) => {
                 data: order,
             });
         } catch (e) {
-            // console.log('e', e)
+            console.log('error', e);
             reject(e);
         }
     });
@@ -121,7 +120,7 @@ const getAllOrderDetails = (id) => {
                 data: order,
             });
         } catch (e) {
-            // console.log('e', e)
+            console.log('error', e);
             reject(e);
         }
     });

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema(
     {
@@ -11,13 +11,16 @@ const productSchema = new mongoose.Schema(
         description: { type: String },
         color: { type: String },
         discount: { type: Number },
-        sold: { type: Number }  ,
-        brand:{type:String},  
-        amount: { type: Number},                                                                                                                                     
+        sold: { type: Number },
+        brand: { type: String },
+        amount: { type: Number },
+        nameShop: { type: String },
+        delivery: { type: mongoose.Schema.Types.ObjectId, ref: 'Delivery' },
+        reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     },
     {
-        timestamps: true,
-    }
+        timestamps: true, // tự động tạo 2 field là createdAt và updatedAt
+    },
 );
 const Product = mongoose.model('Product', productSchema);
 
