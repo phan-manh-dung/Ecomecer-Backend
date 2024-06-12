@@ -119,7 +119,8 @@ const getAllType = async (req, res) => {
 
 const filterByPriceLowToHeight = async (req, res) => {
     try {
-        const response = await ProductService.filterByPriceLowToHeight();
+        const { type } = req.query; // lấy type từ query parameter
+        const response = await ProductService.filterByPriceLowToHeight(type);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(404).json({
@@ -130,7 +131,8 @@ const filterByPriceLowToHeight = async (req, res) => {
 
 const filterByPriceHeightToLow = async (req, res) => {
     try {
-        const response = await ProductService.filterByPriceHeightToLow();
+        const { type } = req.query;
+        const response = await ProductService.filterByPriceHeightToLow(type);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(404).json({
@@ -138,6 +140,7 @@ const filterByPriceHeightToLow = async (req, res) => {
         });
     }
 };
+
 const getNewProducts = async (req, res) => {
     try {
         const response = await ProductService.getNewProducts();

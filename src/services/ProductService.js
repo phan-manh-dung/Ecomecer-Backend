@@ -191,9 +191,9 @@ const getAllType = () => {
     });
 };
 
-const filterByPriceLowToHeight = async () => {
+const filterByPriceLowToHeight = async (type) => {
     try {
-        const products = await Product.find().sort({ price: 1 });
+        const products = await Product.find({ type }).sort({ price: 1 }); // sort theo giá tăng dần
         return {
             status: 'OK',
             message: 'Success filter low to height',
@@ -204,9 +204,9 @@ const filterByPriceLowToHeight = async () => {
     }
 };
 
-const filterByPriceHeightToLow = async () => {
+const filterByPriceHeightToLow = async (type) => {
     try {
-        const products = await Product.find().sort({ price: -1 });
+        const products = await Product.find({ type }).sort({ price: -1 });
         return {
             status: 'OK',
             message: 'Success filter height to low',
