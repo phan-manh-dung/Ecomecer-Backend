@@ -217,15 +217,28 @@ const filterByPriceHeightToLow = async (type) => {
     }
 };
 
-const getNewProducts = async () => {
+const getNewProducts = async (type) => {
     try {
         const tenDaysAgo = new Date(); // lấy time persent
         tenDaysAgo.setDate(tenDaysAgo.getDate() - 10); // trừ 10 ngày từ time persent
-        const products = await Product.find({ createdAt: { $gte: tenDaysAgo } });
+        const products = await Product.find({ type, createdAt: { $gte: tenDaysAgo } });
         return {
             status: 'OK',
             message: 'Success get new products',
             data: products,
+        };
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const getSellingProduct = async (type) => {
+    try {
+        const topSoldProducts = await Product.find({ type }).sort({ sold: -1 }).limit(10);
+        return {
+            status: 'OK',
+            message: 'Success get selling',
+            data: topSoldProducts,
         };
     } catch (error) {
         throw new Error(error.message);
@@ -243,4 +256,5 @@ module.exports = {
     filterByPriceLowToHeight,
     filterByPriceHeightToLow,
     getNewProducts,
+    getSellingProduct,
 };

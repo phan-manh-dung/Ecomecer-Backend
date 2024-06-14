@@ -13,4 +13,5 @@ router.get('/get-all-type', ProductController.getAllType);
 router.get('/filter-price-low-to-height', ProductController.filterByPriceLowToHeight);
 router.get('/filter-price-height-to-low', ProductController.filterByPriceHeightToLow);
 router.get('/new-products', ProductController.getNewProducts);
+router.get('/selling', ProductController.getSellingProduct);
 module.exports = router;

@@ -143,7 +143,20 @@ const filterByPriceHeightToLow = async (req, res) => {
 
 const getNewProducts = async (req, res) => {
     try {
-        const response = await ProductService.getNewProducts();
+        const { type } = req.query;
+        const response = await ProductService.getNewProducts(type);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e,
+        });
+    }
+};
+
+const getSellingProduct = async (req, res) => {
+    try {
+        const { type } = req.query;
+        const response = await ProductService.getSellingProduct(type);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(404).json({
@@ -163,4 +176,5 @@ module.exports = {
     filterByPriceLowToHeight,
     filterByPriceHeightToLow,
     getNewProducts,
+    getSellingProduct,
 };
