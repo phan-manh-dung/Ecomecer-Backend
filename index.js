@@ -6,14 +6,17 @@ const routes = require('./src/routes');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
+// 2 dòng này mới được được body lên tới 50mb
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb' }));
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 

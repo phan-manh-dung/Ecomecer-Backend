@@ -15,6 +15,8 @@ const productSchema = new mongoose.Schema(
         brand: { type: String },
         amount: { type: Number },
         nameShop: { type: String },
+        // loại sản phẩm để phân ra nằm ở đâu
+        category: { type: String },
         delivery: { type: mongoose.Schema.Types.ObjectId, ref: 'Delivery' },
         reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     },
