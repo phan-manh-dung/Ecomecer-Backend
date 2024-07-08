@@ -37,8 +37,6 @@ router.post('/create-payment', async (req, res) => {
         extraData,
         requestType,
     };
-    console.log('body create payment', requestBody);
-    console.log('----------------');
     // Tạo chữ ký
     requestBody.signature = generateSignature(requestBody, secretKey);
 
@@ -56,26 +54,23 @@ router.post('/create-payment', async (req, res) => {
 
 // lấy dữ liệu trả về từ MoMo
 router.post('/callback', async (req, res) => {
-    console.log('callback....');
-    // console.log('body callback', req.body);
     if (req.body.requestId === 'processed') {
         console.log('Callback already processed.');
         return res.status(200).end();
     }
     req.body.requestId = 'processed';
+    console.log('Callback received:', req.body);
     return res.status(200).json(req.body);
 });
 
+// check trạng thái đơn hàng
 router.post('/transaction-status', async (req, res) => {
     const { orderId } = req.body;
-    console.log('Received orderId:', orderId);
-
     if (!orderId || !/^[0-9a-zA-Z]+([-_.:]+[0-9a-zA-Z]+)*$/.test(orderId)) {
         return res.status(400).json({ message: 'Invalid orderId format' });
     }
 
     const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=${partnerCode}&requestId=${orderId}`;
-
     const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
     const requestBody = JSON.stringify({
         partnerCode,
@@ -83,7 +78,6 @@ router.post('/transaction-status', async (req, res) => {
         orderId: orderId,
         signature: signature,
     });
-
     const options = {
         method: 'POST',
         url: 'https://test-payment.momo.vn/v2/gateway/api/query',
