@@ -20,6 +20,8 @@ router.post('/delete-many-order', OrderController.deleteManyOrder);
 router.post('/create-cart', OrderController.createCart);
 // tìm id cart của user để xóa
 router.get('/find-cart/:id', OrderController.findCart);
+// tìm nhiều
+router.post('/find-carts/:id', OrderController.findManyCart);
 router.get('/check-purchased/:id', OrderController.checkIfUserPurchasedProduct);
-
+router.post('/delete-many-cart', OrderController.deleteManyCart);
 module.exports = router;

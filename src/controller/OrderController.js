@@ -214,6 +214,28 @@ const deleteManyOrder = async (req, res) => {
     }
 };
 
+const deleteManyCart = async (req, res) => {
+    try {
+        const cartIdObjects = req.body;
+        const ids = cartIdObjects.map((item) => item.cartId);
+        console.log('ids', ids);
+
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'The ids are required and must be an array',
+            });
+        }
+
+        const response = await OrderService.deleteManyCart(ids);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(500).json({
+            message: e.message,
+        });
+    }
+};
+
 const findCart = async (req, res) => {
     try {
         const { id } = req.params; // Thay đổi ở đây, sử dụng id thay vì userId
@@ -229,6 +251,30 @@ const findCart = async (req, res) => {
     } catch (e) {
         return res.status(404).json({
             message: e,
+        });
+    }
+};
+
+const findManyCart = async (req, res) => {
+    try {
+        const { id } = req.params; // Sử dụng id của user
+        const { productIds } = req.body; // Nhận productIds từ body
+
+        if (!id || !productIds) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The userId and productIds are required',
+            });
+        }
+
+        // Nếu productIds không phải là mảng, chuyển nó thành mảng
+        const productIdsArray = Array.isArray(productIds) ? productIds : [productIds];
+
+        const response = await OrderService.findManyCart(id, productIdsArray); // Truyền mảng productIds
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e.message,
         });
     }
 };
@@ -264,7 +310,9 @@ module.exports = {
     createCart,
     getAllCart,
     deleteCart,
+    deleteManyCart,
     findCart,
+    findManyCart,
     deleteOrderDatabaseByAdmin,
     checkIfUserPurchasedProduct,
 };

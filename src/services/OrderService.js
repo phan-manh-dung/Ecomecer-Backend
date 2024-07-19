@@ -233,6 +233,22 @@ const findCart = (userId, productId) => {
     });
 };
 
+const findManyCart = (userId, productIds) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const carts = await Cart.find({ userId, 'cartItems.product': { $in: productIds } });
+            if (!carts || carts.length === 0) {
+                resolve({ message: 'No carts found for the given productIds' });
+            } else {
+                resolve({ carts: carts.map((cart) => ({ cartId: cart._id, productId: cart.cartItems.product })) });
+            }
+        } catch (error) {
+            console.error('Error finding carts:', error);
+            reject({ message: 'Internal server error' });
+        }
+    });
+};
+
 // const deleteManyProduct = (ids) => {
 //     return new Promise(async (resolve, reject) => {
 //         try {
@@ -271,6 +287,30 @@ const deleteManyOrder = (ids) => {
     });
 };
 
+const deleteManyCart = (ids) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const result = await Cart.deleteMany({ _id: { $in: ids } });
+            if (result.deletedCount === 0) {
+                resolve({
+                    status: 'OK',
+                    message: 'No carts found to delete',
+                });
+            } else {
+                resolve({
+                    status: 'OK',
+                    message: 'Delete carts success',
+                });
+            }
+        } catch (e) {
+            reject({
+                status: 'ERR',
+                message: e.message,
+            });
+        }
+    });
+};
+
 const checkIfUserPurchasedProduct = async (id, productId) => {
     try {
         const order = await Order.findOne({
@@ -293,7 +333,9 @@ module.exports = {
     createCart,
     getAllCart,
     deleteCart,
+    deleteManyCart,
     findCart,
+    findManyCart,
     deleteOrderDatabaseByAdmin,
     deleteOrderToCancelled,
     checkIfUserPurchasedProduct,
