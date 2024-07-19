@@ -1,16 +1,28 @@
 const ProductService = require('../services/ProductService');
+const { io } = require('../../index');
 
 const createProduct = async (req, res) => {
     try {
-        const { name, image, type, price, countInStock, rating, description, color, discount } = req.body;
-        if (!name || !image || !type || !price || !countInStock || !rating || !description || !color || !discount) {
+        const {
+            name,
+            image,
+            type,
+            price,
+            countInStock,
+            description,
+            color,
+            discount,
+            brand,
+            originOfCountry,
+            additionalImages = [],
+        } = req.body;
+        if (!name || !image || !type || !price || !countInStock || !color || !originOfCountry) {
             return res.status(200).json({
                 status: 'ERR',
-                message: 'Input product error here',
+                message: 'Input product error controller',
             });
         }
-        const response = await ProductService.createProduct(req.body); // nếu k rơi vào trường hợp nào thì cho
-        // req.body qua thằng UserService
+        const response = await ProductService.createProduct(req.body);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(404).json({
@@ -117,6 +129,17 @@ const getAllType = async (req, res) => {
     }
 };
 
+const getAllColor = async (req, res) => {
+    try {
+        const response = await ProductService.getAllColor();
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(404).json({
+            message: e,
+        });
+    }
+};
+
 const filterByPriceLowToHeight = async (req, res) => {
     try {
         const { type } = req.query; // lấy type từ query parameter
@@ -165,6 +188,33 @@ const getSellingProduct = async (req, res) => {
     }
 };
 
+// phần đánh giá cho sản phẩm
+
+const createVote = async (req, res) => {
+    try {
+        const { productId, userId, rating, comment, images = [] } = req.body;
+        if (!productId || !userId || !rating || !comment) {
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'Input vote error controller',
+            });
+        }
+        const response = await ProductService.createVote(req.body);
+        if (req.io) {
+            req.io.emit('newComment', response);
+        } else {
+            console.error('io is undefined');
+        }
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: 'An error occurred while creating the vote',
+            error: e.message,
+        });
+    }
+};
+
 module.exports = {
     createProduct,
     updateProduct,
@@ -177,4 +227,6 @@ module.exports = {
     filterByPriceHeightToLow,
     getNewProducts,
     getSellingProduct,
+    getAllColor,
+    createVote,
 };

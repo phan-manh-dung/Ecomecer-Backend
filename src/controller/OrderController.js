@@ -195,7 +195,7 @@ const deleteCart = async (req, res) => {
     }
 };
 
-const deleteMany = async (req, res) => {
+const deleteManyOrder = async (req, res) => {
     try {
         const ids = req.body.ids;
         if (!ids) {
@@ -233,16 +233,38 @@ const findCart = async (req, res) => {
     }
 };
 
+const checkIfUserPurchasedProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { productId } = req.query;
+        if (!id || !productId) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'The userId or productId is required controller',
+            });
+        }
+        const response = await OrderService.checkIfUserPurchasedProduct(id, productId);
+        return res.status(200).json({
+            purchased: response, // true hoặc false
+        });
+    } catch (e) {
+        return res.status(404).json({
+            message: e,
+        });
+    }
+};
+
 module.exports = {
     createOrder,
     getDetailsOrder,
     getAllOrderDetails,
     getAllOrder,
     deleteOrderToCancelled,
-    deleteMany,
+    deleteManyOrder,
     createCart,
     getAllCart,
     deleteCart,
     findCart,
     deleteOrderDatabaseByAdmin,
+    checkIfUserPurchasedProduct,
 };

@@ -55,7 +55,6 @@ router.post('/create-payment', async (req, res) => {
 // lấy dữ liệu trả về từ MoMo
 router.post('/callback', async (req, res) => {
     if (req.body.requestId === 'processed') {
-        console.log('Callback already processed.');
         return res.status(200).end();
     }
     req.body.requestId = 'processed';

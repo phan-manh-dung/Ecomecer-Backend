@@ -1,8 +1,21 @@
 const Product = require('../models/ProductModel');
+const Review = require('../models/modelProducts/ReviewProductModel');
 
 const createProduct = (newProduct) => {
     return new Promise(async (resolve, reject) => {
-        const { name, image, type, price, countInStock, rating, description, color, discount, brand } = newProduct;
+        const {
+            name,
+            image,
+            type,
+            price,
+            countInStock,
+            description,
+            color,
+            discount,
+            brand,
+            originOfCountry,
+            additionalImages,
+        } = newProduct;
         try {
             const checkProduct = await Product.findOne({
                 name: name,
@@ -17,14 +30,14 @@ const createProduct = (newProduct) => {
                 name,
                 image,
                 type,
-                price,
-                quality: Number(countInStock),
-                rating,
+                price: Number(price),
+                countInStock: Number(countInStock),
                 description,
-                countInStock,
                 color,
                 discount: Number(discount),
                 brand,
+                originOfCountry,
+                additionalImages: additionalImages || [],
             });
             if (newProduct) {
                 resolve({
@@ -191,6 +204,22 @@ const getAllType = () => {
     });
 };
 
+const getAllColor = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allColor = await Product.distinct('color');
+
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: allColor,
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 const filterByPriceLowToHeight = async (type) => {
     try {
         const products = await Product.find({ type }).sort({ price: 1 }); // sort theo giá tăng dần
@@ -245,6 +274,41 @@ const getSellingProduct = async (type) => {
     }
 };
 
+// đánh giá sản phẩm
+const createVote = (newVote) => {
+    return new Promise(async (resolve, reject) => {
+        const { productId, userId, rating, comment, images } = newVote;
+        try {
+            const checkVote = await Review.findOne({
+                userId: userId,
+                productId: productId,
+            });
+            if (checkVote !== null && checkVote !== undefined) {
+                resolve({
+                    status: 'OK',
+                    message: 'The vote is already service',
+                });
+            }
+            const newVote = await Review.create({
+                productId,
+                userId,
+                rating: Number(rating),
+                comment,
+                images: images || [],
+            });
+            if (newVote) {
+                resolve({
+                    status: 'OK',
+                    message: 'Success',
+                    data: newVote,
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 module.exports = {
     createProduct,
     updateProduct,
@@ -257,4 +321,6 @@ module.exports = {
     filterByPriceHeightToLow,
     getNewProducts,
     getSellingProduct,
+    getAllColor,
+    createVote,
 };

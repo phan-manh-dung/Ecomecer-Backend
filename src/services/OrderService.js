@@ -250,15 +250,38 @@ const findCart = (userId, productId) => {
 const deleteManyOrder = (ids) => {
     return new Promise(async (resolve, reject) => {
         try {
-            await Order.deleteMany({ _id: { $in: ids } }); // Sử dụng $in operator để xóa các bản ghi có _id nằm trong mảng ids
-            resolve({
-                status: 'OK',
-                message: 'Delete order success',
-            });
+            const result = await Order.deleteMany({ _id: { $in: ids } });
+            if (result.deletedCount === 0) {
+                resolve({
+                    status: 'OK',
+                    message: 'No orders found to delete',
+                });
+            } else {
+                resolve({
+                    status: 'OK',
+                    message: 'Delete order success',
+                });
+            }
         } catch (e) {
-            reject(e);
+            reject({
+                status: 'ERR',
+                message: e.message,
+            });
         }
     });
+};
+
+const checkIfUserPurchasedProduct = async (id, productId) => {
+    try {
+        const order = await Order.findOne({
+            user: id,
+            'orderItems.product': productId,
+        });
+
+        return !!order; // Trả về true nếu đã mua, ngược lại false
+    } catch (error) {
+        throw new Error('Error checking purchase status');
+    }
 };
 
 module.exports = {
@@ -273,4 +296,5 @@ module.exports = {
     findCart,
     deleteOrderDatabaseByAdmin,
     deleteOrderToCancelled,
+    checkIfUserPurchasedProduct,
 };
