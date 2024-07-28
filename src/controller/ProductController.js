@@ -69,6 +69,7 @@ const deleteProduct = async (req, res) => {
         });
     }
 };
+
 const deleteMany = async (req, res) => {
     try {
         const ids = req.body.ids;
@@ -118,6 +119,7 @@ const getAllProduct = async (req, res) => {
         });
     }
 };
+
 const getAllType = async (req, res) => {
     try {
         const response = await ProductService.getAllType();
@@ -192,8 +194,8 @@ const getSellingProduct = async (req, res) => {
 
 const createVote = async (req, res) => {
     try {
-        const { productId, userId, rating, comment, images = [] } = req.body;
-        if (!productId || !userId || !rating || !comment) {
+        const { productId, userId, nameUser, avatarUser, rating, comment, images = [] } = req.body;
+        if (!productId || !userId || !nameUser || !rating || !comment) {
             return res.status(400).json({
                 status: 'ERR',
                 message: 'Input vote error controller',
@@ -215,6 +217,22 @@ const createVote = async (req, res) => {
     }
 };
 
+const getAllVotes = async (req, res) => {
+    try {
+        const response = await ProductService.getAllVotes();
+        return res.status(200).json({
+            status: 'OK',
+            data: response,
+        });
+    } catch (e) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: 'An error occurred while fetching votes',
+            error: e.message,
+        });
+    }
+};
+
 module.exports = {
     createProduct,
     updateProduct,
@@ -229,4 +247,5 @@ module.exports = {
     getSellingProduct,
     getAllColor,
     createVote,
+    getAllVotes,
 };

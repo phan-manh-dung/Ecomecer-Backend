@@ -6,6 +6,7 @@ const OrderController = require('../controller/OrderController');
 // order
 router.post('/create/:id', authMiddlewareOne, OrderController.createOrder);
 router.get('/get-details-order/:id', OrderController.getDetailsOrder);
+
 router.get('/get-all-order/:id', authUserMiddleware, OrderController.getAllOrderDetails);
 router.get('/get-all-order', OrderController.getAllOrder);
 // xóa order ra khỏi database (thực sự xóa dữ liệu)

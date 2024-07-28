@@ -1,4 +1,5 @@
 const Product = require('../models/ProductModel');
+const User = require('../models/UserModel');
 const Review = require('../models/modelProducts/ReviewProductModel');
 
 const createProduct = (newProduct) => {
@@ -99,6 +100,7 @@ const deleteProduct = (id) => {
         }
     });
 };
+
 const deleteManyProduct = (ids) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -277,7 +279,7 @@ const getSellingProduct = async (type) => {
 // đánh giá sản phẩm
 const createVote = (newVote) => {
     return new Promise(async (resolve, reject) => {
-        const { productId, userId, rating, comment, images } = newVote;
+        const { productId, userId, nameUser, avatarUser, rating, comment, images } = newVote;
         try {
             const checkVote = await Review.findOne({
                 userId: userId,
@@ -292,6 +294,8 @@ const createVote = (newVote) => {
             const newVote = await Review.create({
                 productId,
                 userId,
+                nameUser,
+                avatarUser,
                 rating: Number(rating),
                 comment,
                 images: images || [],
@@ -303,6 +307,17 @@ const createVote = (newVote) => {
                     data: newVote,
                 });
             }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+const getAllVotes = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const votes = await Review.find();
+            resolve(votes);
         } catch (e) {
             reject(e);
         }
@@ -323,4 +338,5 @@ module.exports = {
     getSellingProduct,
     getAllColor,
     createVote,
+    getAllVotes,
 };

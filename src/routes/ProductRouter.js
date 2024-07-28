@@ -17,4 +17,5 @@ router.get('/new-products', ProductController.getNewProducts);
 router.get('/selling', ProductController.getSellingProduct);
 // đánh giá sản phẩm
 router.post('/create-vote', ProductController.createVote);
+router.get('/get-all-votes', ProductController.getAllVotes);
 module.exports = router;
