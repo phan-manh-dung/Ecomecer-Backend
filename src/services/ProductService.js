@@ -324,6 +324,17 @@ const getAllVotes = () => {
     });
 };
 
+const getVotesByProductId = (productId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const votes = await Review.find({ productId });
+            resolve(votes);
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 module.exports = {
     createProduct,
     updateProduct,
@@ -339,4 +350,5 @@ module.exports = {
     getAllColor,
     createVote,
     getAllVotes,
+    getVotesByProductId,
 };

@@ -59,6 +59,30 @@ io.on('connection', (socket) => {
     });
 });
 
+// cloudinary
+const cloudinary = require('./cloudinary');
+const multer = require('multer');
+
+// thư viện này giúp k phải lưu file ở server
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    folder: 'ECOMMERCE',
+    allowedFormats: ['jpg', 'png', 'jpeg'],
+    transformation: [{ width: 500, height: 500, crop: 'limit' }],
+});
+
+const upload = multer({
+    storage: storage,
+});
+
+app.post('/upload', upload.fields([{ name: 'img', maxCount: 20 }]), (req, res) => {
+    const link_img = req.files['img'][0];
+    res.send(link_img);
+});
+
+// port 4000
 server.listen(PORT, () => {
     console.log('Server on running port', +PORT);
 });

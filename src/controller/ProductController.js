@@ -233,6 +233,23 @@ const getAllVotes = async (req, res) => {
     }
 };
 
+const getVotesByProductId = async (req, res) => {
+    const { productId } = req.params;
+    try {
+        const response = await ProductService.getVotesByProductId(productId);
+        return res.status(200).json({
+            status: 'OK',
+            data: response,
+        });
+    } catch (e) {
+        return res.status(500).json({
+            status: 'ERR',
+            message: 'An error occurred while fetching votes',
+            error: e.message,
+        });
+    }
+};
+
 module.exports = {
     createProduct,
     updateProduct,
@@ -248,4 +265,5 @@ module.exports = {
     getAllColor,
     createVote,
     getAllVotes,
+    getVotesByProductId,
 };
