@@ -15,8 +15,7 @@ const createUser = async (req, res) => {
                 message: 'Password unlike confirmPassword',
             });
         }
-        const response = await UserService.createUser(req.body); // nếu k rơi vào trường hợp nào thì cho
-        // req.body qua thằng UserService
+        const response = await UserService.createUser(req.body);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(404).json({
@@ -34,8 +33,7 @@ const loginUser = async (req, res) => {
                 message: 'Insufficient value entered',
             });
         }
-        const response = await UserService.loginUser(req.body); // nếu k rơi vào trường hợp nào thì cho
-        // req.body qua thằng UserService
+        const response = await UserService.loginUser(req.body);
         const { refresh_token, ...newResponse } = response;
         res.cookie('refresh_token', refresh_token, {
             httpOnly: true,
@@ -61,8 +59,7 @@ const updateUser = async (req, res) => {
                 message: 'The userId do not exist',
             });
         }
-        const response = await UserService.updateUser(userId, data); // nếu k rơi vào trường hợp nào thì cho
-        //userId qua thằng UserService
+        const response = await UserService.updateUser(userId, data);
         return res.status(200).json(response);
     } catch (e) {
         return res.status(404).json({
@@ -155,7 +152,6 @@ const logUotUser = async (req, res) => {
 const deleteMany = async (req, res) => {
     try {
         const ids = req.body.ids;
-
         if (!ids) {
             return res.status(200).json({
                 status: 'ERR',
@@ -195,6 +191,30 @@ const findNameUser = async (req, res) => {
     }
 };
 
+const findPhoneForUser = async (req, res) => {
+    try {
+        let { phone } = req.query;
+        if (!phone) {
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'The phone is required',
+            });
+        }
+        // Loại bỏ khoảng trắng và ký tự xuống dòng
+        phone = phone.trim();
+        const response = await UserService.findPhoneForUser(phone);
+        return res.status(200).json({
+            status: 'OK',
+            data: response,
+        });
+    } catch (e) {
+        console.error('Error in phone controller:', e.message);
+        return res.status(500).json({
+            message: 'Internal server error controller',
+        });
+    }
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -205,5 +225,6 @@ module.exports = {
     refreshToken,
     logUotUser,
     deleteMany,
+    findPhoneForUser,
     findNameUser,
 };

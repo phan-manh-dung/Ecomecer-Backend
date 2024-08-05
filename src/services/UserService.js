@@ -192,6 +192,21 @@ const findNameUser = (userId) => {
     });
 };
 
+const findPhoneForUser = (phone) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const phoneUser = await User.findOne({ phone });
+            if (!phoneUser) {
+                return resolve(null);
+            }
+            resolve(phoneUser);
+        } catch (error) {
+            console.error('Error finding user:', error.message);
+            reject({ message: 'Internal server error service' });
+        }
+    });
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -201,4 +216,5 @@ module.exports = {
     getDetailsUser,
     deleteManyUser,
     findNameUser,
+    findPhoneForUser,
 };

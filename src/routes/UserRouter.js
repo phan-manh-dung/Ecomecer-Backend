@@ -14,5 +14,6 @@ router.post('/refresh-token', userController.refreshToken);
 router.post('/delete-many', authMiddleware, userController.deleteMany);
 // api tìm tên người dùng
 router.get('/find-name/:id', userController.findNameUser);
+router.get('/find-phone', userController.findPhoneForUser);
 
 module.exports = router;
