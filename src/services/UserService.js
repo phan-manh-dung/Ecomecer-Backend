@@ -1,6 +1,7 @@
 const User = require('../models/UserModel');
 const bcrypt = require('bcrypt');
 const { generalAccessToken, refreshAccessToken } = require('./JwtServices');
+const { use } = require('../routes/UserRouter');
 
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {
@@ -207,6 +208,42 @@ const findPhoneForUser = (phone) => {
     });
 };
 
+const resetPassword = async (newData) => {
+    return new Promise(async (resolve, reject) => {
+        const { userId, newPassword } = newData;
+        try {
+            const checkUser = await User.findOne({
+                _id: userId,
+            });
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not exists',
+                });
+            }
+            const hash = bcrypt.hashSync(String(newPassword), 10);
+            const updatedUser = await User.findByIdAndUpdate(userId, { $set: { password: hash } }, { new: true });
+            if (!updatedUser) {
+                return reject({
+                    status: 'ERR',
+                    message: 'User not found or phone number mismatch',
+                });
+            }
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: updatedUser,
+            });
+        } catch (e) {
+            reject({
+                status: 'ERR',
+                message: 'Error updating password',
+                error: e.message,
+            });
+        }
+    });
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -217,4 +254,5 @@ module.exports = {
     deleteManyUser,
     findNameUser,
     findPhoneForUser,
+    resetPassword,
 };

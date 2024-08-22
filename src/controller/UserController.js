@@ -215,6 +215,23 @@ const findPhoneForUser = async (req, res) => {
     }
 };
 
+const resetPassword = async (req, res) => {
+    try {
+        const { userId, phone, newPassword } = req.body;
+        if (!userId || !phone || !newPassword) {
+            return res.status(200).json({
+                status: 'ERR',
+                message: 'userId, phone, newPassword is required controller',
+            });
+        }
+        const response = await UserService.resetPassword(req.body);
+        res.status(200).json(response);
+    } catch (error) {
+        console.error('Error in resetPassword:', error);
+        res.status(500).json({ status: 'ERR', message: 'Internal server error' });
+    }
+};
+
 module.exports = {
     createUser,
     loginUser,
@@ -227,4 +244,5 @@ module.exports = {
     deleteMany,
     findPhoneForUser,
     findNameUser,
+    resetPassword,
 };

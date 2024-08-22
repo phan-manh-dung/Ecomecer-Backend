@@ -12,6 +12,7 @@ router.get('/getAll', userController.getAllUser);
 router.get('/get-details/:id', userController.getDetailsUser);
 router.post('/refresh-token', userController.refreshToken);
 router.post('/delete-many', authMiddleware, userController.deleteMany);
+router.post('/reset-password', userController.resetPassword);
 // api tìm tên người dùng
 router.get('/find-name/:id', userController.findNameUser);
 router.get('/find-phone', userController.findPhoneForUser);
