@@ -1,5 +1,5 @@
 const ProductService = require('../services/ProductService');
-const { io } = require('../../index');
+const { io } = require('../index');
 
 const createProduct = async (req, res) => {
     try {
