@@ -206,6 +206,30 @@ const getAllType = () => {
     });
 };
 
+const searchProductsByTypeAndName = (type, name) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Tạo query với điều kiện lọc theo type và tên sản phẩm
+            const regex = new RegExp(name, 'i'); // Không phân biệt chữ hoa chữ thường
+            const query = {
+                type: type,
+                name: { $regex: regex },
+            };
+
+            // Tìm sản phẩm theo điều kiện lọc
+            const products = await Product.find(query);
+
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: products,
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 const getAllColor = () => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -351,4 +375,5 @@ module.exports = {
     createVote,
     getAllVotes,
     getVotesByProductId,
+    searchProductsByTypeAndName,
 };

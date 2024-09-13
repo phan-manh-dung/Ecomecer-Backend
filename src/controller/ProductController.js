@@ -131,6 +131,25 @@ const getAllType = async (req, res) => {
     }
 };
 
+const searchProductsByTypeAndName = async (req, res) => {
+    try {
+        const { type, name } = req.query;
+        if (!type || !name) {
+            return res.status(400).json({
+                status: 'Error',
+                message: 'Type and name parameters are required',
+            });
+        }
+
+        const response = await ProductService.searchProductsByTypeAndName(type, name);
+        return res.status(200).json(response);
+    } catch (e) {
+        return res.status(500).json({
+            message: e.message,
+        });
+    }
+};
+
 const getAllColor = async (req, res) => {
     try {
         const response = await ProductService.getAllColor();
@@ -266,4 +285,5 @@ module.exports = {
     createVote,
     getAllVotes,
     getVotesByProductId,
+    searchProductsByTypeAndName,
 };

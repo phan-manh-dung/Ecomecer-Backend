@@ -20,4 +20,7 @@ router.post('/create-vote', ProductController.createVote);
 // router.get('/get-all-votes', ProductController.getAllVotes);
 router.get('/get-votes/:productId', ProductController.getVotesByProductId);
 
+// test api
+router.get('/search-product-type-name', ProductController.searchProductsByTypeAndName);
+
 module.exports = router;
