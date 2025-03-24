@@ -1,7 +1,6 @@
 const User = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
 const { generalAccessToken, refreshAccessToken } = require('./JwtServices');
-const { use } = require('../routes/UserRouter');
 
 const createUser = (newUser) => {
     return new Promise(async (resolve, reject) => {

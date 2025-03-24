@@ -9,7 +9,6 @@ const createOrder = async (req, res) => {
             moreAddress,
             district,
             city,
-            country,
             paymentMethod,
             shippingPrice,
             totalPrice,
@@ -23,7 +22,6 @@ const createOrder = async (req, res) => {
             !moreAddress ||
             !district ||
             !city ||
-            !country ||
             !paymentMethod ||
             !shippingPrice ||
             !totalPrice
@@ -41,7 +39,6 @@ const createOrder = async (req, res) => {
             moreAddress,
             district,
             city,
-            country,
             paymentMethod,
             shippingPrice,
             totalPrice,
@@ -80,7 +77,6 @@ const createCart = async (req, res) => {
 const getDetailsOrder = async (req, res) => {
     try {
         const orderId = req.params.id;
-        console.log();
         if (!orderId) {
             return res.status(200).json({
                 status: 'ERR',
@@ -100,16 +96,16 @@ const getDetailsOrder = async (req, res) => {
 const getAllOrderDetails = async (req, res) => {
     try {
         const userId = req.params.id;
+        const status = req.headers.status;
         if (!userId) {
             return res.status(200).json({
                 status: 'ERR',
                 message: 'The userId is required',
             });
         }
-        const response = await OrderService.getAllOrderDetails(userId);
+        const response = await OrderService.getAllOrderDetails(userId, status);
         return res.status(200).json(response);
     } catch (e) {
-        // console.log(e)
         return res.status(404).json({
             message: e,
         });

@@ -10,7 +10,6 @@ const createOrder = (newOrder) => {
             moreAddress,
             district,
             city,
-            country,
             paymentMethod,
             shippingPrice,
             totalPrice,
@@ -26,7 +25,6 @@ const createOrder = (newOrder) => {
                 moreAddress,
                 district,
                 city,
-                country,
                 paymentMethod,
                 shippingPrice,
                 totalPrice,
@@ -101,27 +99,41 @@ const getOrderDetails = (id) => {
     });
 };
 
-const getAllOrderDetails = (id) => {
+const getAllOrderDetails = (id, status) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const order = await Order.find({
-                user: id,
-            }).sort({ createdAt: -1, updatedAt: -1 });
-            if (order === null) {
-                resolve({
+            if (!id) {
+                return resolve({
                     status: 'ERR',
-                    message: 'The order is not defined',
+                    message: 'User ID is required',
                 });
             }
+            // Tạo query object để tìm kiếm theo user và status (nếu có)
+            let query = { user: id };
 
-            resolve({
-                status: 'OK',
-                message: 'SUCESSS',
-                data: order,
-            });
+            if (status) {
+                query.status = status; // Thêm điều kiện status nếu có
+            }
+            const order = await Order.find(query).sort({ createdAt: -1, updatedAt: -1 });
+            if (!order || order.length === 0 || order === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'No orders found',
+                });
+            } else {
+                resolve({
+                    status: 'OK',
+                    message: 'SUCCESS',
+                    data: order,
+                });
+            }
         } catch (e) {
             console.log('error', e);
-            reject(e);
+            reject({
+                status: 'ERR',
+                message: 'An error occurred while fetching orders',
+                error: e,
+            });
         }
     });
 };

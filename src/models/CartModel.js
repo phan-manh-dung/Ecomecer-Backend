@@ -15,7 +15,6 @@ const cartSchema = new mongoose.Schema(
                 type: { type: String },
             },
         ],
-        // Các trường thông tin khác của đơn hàng (nếu cần)
     },
     { timestamps: true },
 );
